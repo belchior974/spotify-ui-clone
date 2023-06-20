@@ -2,7 +2,6 @@
 import { HomeIcon, Library, Search } from "lucide-react";
 import { useContext, useEffect, useState } from "react";
 import { AxiosContext } from "./AxiosClient";
-import { ColoredBoxButtons } from "./ColoredBoxButtons";
 import { ColoredButton } from "./ColoredButton";
 import { MenuItem } from "./MenuItem";
 import { MenuItemPlaylist } from "./MenuItemPlaylist";
@@ -18,12 +17,6 @@ export const Sidebar = ({ data }: SidebarProps) => {
 
   return (
     <aside className="w-72 bg-zinc-950 p-6">
-      {/* <ColoredBoxButtons>
-        <ColoredButton color="red" />
-        <ColoredButton color="yellow" />
-        <ColoredButton color="green" />
-      </ColoredBoxButtons> */}
-
       <div className="flex items-center gap-2">
         <ColoredButton color="red" />
         <ColoredButton color="yellow" />

@@ -1,10 +1,12 @@
 "use client"
-import { SpotifyApiProps } from "@/interfaces";
+import { SpotifyApiProps, SpotifyWebApiProps, UserProfile } from "@/interfaces";
 import { ChevronLeft, ChevronRight, Play } from "lucide-react";
 import Image from "next/image"
 import { useContext, useEffect, useState } from "react";
 import { AxiosContext } from "./AxiosClient";
 import { Footer } from "./Footer";
+import { LastItemsSection } from "./LastItemsSection";
+import { MadeForSection } from "./MadeForSection";
 import { Sidebar } from "./Sidebar";
 
 
@@ -13,8 +15,9 @@ export const HomePage = () => {
     const { axiosInstance } = useContext(AxiosContext);
 
     const [playlists, setPlaylists] = useState<SpotifyApiProps>({} as SpotifyApiProps);
-    // const [topItems, setTopItems] = useState<>
-
+    const [topItems, setTopItems] = useState<SpotifyWebApiProps>({} as SpotifyWebApiProps);
+    const [userProfile, setUserProfile] = useState<UserProfile>({} as UserProfile);
+    const [madeForPlaylists, setMadeForPlaylists] = useState<SpotifyApiProps>({} as SpotifyApiProps);
   
     const verifyPeriod = () => {
       let now = new Date();
@@ -29,36 +32,56 @@ export const HomePage = () => {
   
     const fetchUserPlaylists = async () => {
       try {
-        console.log(axiosInstance);
         const response = await axiosInstance.get(
           "me/playlists?limit=18&offset=1"
         );
-        console.log(response.data.items);
         setPlaylists(response.data);
       } catch (e) {
         console.error(e);
       }
     };
 
-    const fetchUserTopTracks = async () => {
+    const fetchMadeForPlaylists = async () => {
+      try {
+        const response = await axiosInstance.get(
+          "me/playlists?limit=7&offset=1"
+        );
+        setMadeForPlaylists(response.data);
+      } catch (e) {
+        console.error(e);
+      }
+    };
+
+    const fetchUserTopItems = async () => {
         try {
-            console.log(axiosInstance);
             const response = await axiosInstance.get(
-              "me/top/tracks?time_range=short_term"
+              "me/top/artists?time_range=short_term&limit=6"
             );
-            console.log(response.data.items);
-            setPlaylists(response.data);
+
+            setTopItems(response.data);
           } catch (e) {
             console.error(e);
           }
     }
+
+    const fetchUserProfile = async () => {
+      try {
+        const response: any = await axiosInstance.get(
+          "me"
+        );
+        setUserProfile(response.data);
+      } catch (e) {
+        console.error(e);
+      }
+    }
   
     useEffect(() => {
       fetchUserPlaylists();
+      fetchUserTopItems();
+      fetchUserProfile();
+      fetchMadeForPlaylists();
     }, []);
   
-
-
     return (
         <div className="h-screen flex flex-col">
         <div className="flex flex-1">
@@ -73,189 +96,11 @@ export const HomePage = () => {
               </button>
             </div>
 
-            {/* <h1 className="font-semibold text-3xl mt-10">Good Afternoon</h1> */}
             <h1 className="font-semibold text-3xl mt-10">{verifyPeriod()}</h1>
 
-            <div className="grid grid-cols-3 gap-4 mt-4">
-              <a
-                href="#"
-                className="bg-white/5 group rounded flex items-center gap-4 overflow-hidden hover:bg-white/10 transition-colors"
-              >
-                <Image
-                  src="/album.jpg"
-                  width={104}
-                  height={104}
-                  alt="Capa do álbum Life is Strange da dupla Angus and Julia Stone"
-                />
-                <strong>Life is Strange</strong>
+            <LastItemsSection data={topItems} />
 
-                <button className="w-12 h-12 flex items-center justify-center pl-1 rounded-full bg-green-400 text-black ml-auto mr-8 invisible group-hover:visible ">
-                  <Play />
-                </button>
-              </a>
-              <a
-                href="#"
-                className="bg-white/5 group rounded flex items-center gap-4 overflow-hidden hover:bg-white/10 transition-colors"
-              >
-                <Image
-                  src="/album.jpg"
-                  width={104}
-                  height={104}
-                  alt="Capa do álbum Life is Strange da dupla Angus and Julia Stone"
-                />
-                <strong>Life is Strange</strong>
-                <button className="w-12 h-12 flex items-center justify-center pl-1 rounded-full bg-green-400 text-black ml-auto mr-8 invisible group-hover:visible ">
-                  <Play />
-                </button>
-              </a>
-              <a
-                href="#"
-                className="bg-white/5 group rounded flex items-center gap-4 overflow-hidden hover:bg-white/10 transition-colors"
-              >
-                <Image
-                  src="/album.jpg"
-                  width={104}
-                  height={104}
-                  alt="Capa do álbum Life is Strange da dupla Angus and Julia Stone"
-                />
-                <strong>Life is Strange</strong>
-                <button className="w-12 h-12 flex items-center justify-center pl-1 rounded-full bg-green-400 text-black ml-auto mr-8 invisible group-hover:visible ">
-                  <Play />
-                </button>
-              </a>
-              <a
-                href="#"
-                className="bg-white/5 group rounded flex items-center gap-4 overflow-hidden hover:bg-white/10 transition-colors"
-              >
-                <Image
-                  src="/album.jpg"
-                  width={104}
-                  height={104}
-                  alt="Capa do álbum Life is Strange da dupla Angus and Julia Stone"
-                />
-                <strong>Life is Strange</strong>
-                <button className="w-12 h-12 flex items-center justify-center pl-1 rounded-full bg-green-400 text-black ml-auto mr-8 invisible group-hover:visible ">
-                  <Play />
-                </button>
-              </a>
-              <a
-                href="#"
-                className="bg-white/5 group rounded flex items-center gap-4 overflow-hidden hover:bg-white/10 transition-colors"
-              >
-                <Image
-                  src="/album.jpg"
-                  width={104}
-                  height={104}
-                  alt="Capa do álbum Life is Strange da dupla Angus and Julia Stone"
-                />
-                <strong>Life is Strange</strong>
-                <button className="w-12 h-12 flex items-center justify-center pl-1 rounded-full bg-green-400 text-black ml-auto mr-8 invisible group-hover:visible ">
-                  <Play />
-                </button>
-              </a>
-              <a
-                href="#"
-                className="bg-white/5 group rounded flex items-center gap-4 overflow-hidden hover:bg-white/10 transition-colors"
-              >
-                <Image
-                  src="/album.jpg"
-                  width={104}
-                  height={104}
-                  alt="Capa do álbum Life is Strange da dupla Angus and Julia Stone"
-                />
-                <strong>Life is Strange</strong>
-                <button className="w-12 h-12 flex items-center justify-center pl-1 rounded-full bg-green-400 text-black ml-auto mr-8 invisible group-hover:visible ">
-                  <Play />
-                </button>
-              </a>
-            </div>
-
-            <h2 className="font-semibold text-2xl mt-10">
-              Made For Carlos Belchior
-            </h2>
-
-            <div className="grid grid-cols-8 gap-4 mt-4">
-              <a
-                href=""
-                className="bg-white/5 p-3 rounded-md flex flex-col gap-2 hover:bg-white/10 "
-              >
-                <Image
-                  className="w-full"
-                  src="/album.jpg"
-                  width={120}
-                  height={120}
-                  alt="Capa do álbum Life is Strange da dupla Angus and Julia Stone"
-                />
-                <strong className="font-semibold">Daily Mix 1</strong>
-                <span className="text-sm text-zinc-400">
-                  Angus & Julia Stone, Clairo,The Luminieers and more
-                </span>
-              </a>
-              <a
-                href=""
-                className="bg-white/5 p-3 rounded-md flex flex-col gap-2 hover:bg-white/10 "
-              >
-                <Image
-                  className="w-full"
-                  src="/album.jpg"
-                  width={120}
-                  height={120}
-                  alt="Capa do álbum Life is Strange da dupla Angus and Julia Stone"
-                />
-                <strong className="font-semibold">Daily Mix 1</strong>
-                <span className="text-sm text-zinc-400">
-                  Angus & Julia Stone, Clairo,The Luminieers and more
-                </span>
-              </a>
-              <a
-                href=""
-                className="bg-white/5 p-3 rounded-md flex flex-col gap-2 hover:bg-white/10 "
-              >
-                <Image
-                  className="w-full"
-                  src="/album.jpg"
-                  width={120}
-                  height={120}
-                  alt="Capa do álbum Life is Strange da dupla Angus and Julia Stone"
-                />
-                <strong className="font-semibold">Daily Mix 1</strong>
-                <span className="text-sm text-zinc-400">
-                  Angus & Julia Stone, Clairo,The Luminieers and more
-                </span>
-              </a>
-              <a
-                href=""
-                className="bg-white/5 p-3 rounded-md flex flex-col gap-2 hover:bg-white/10 "
-              >
-                <Image
-                  className="w-full"
-                  src="/album.jpg"
-                  width={120}
-                  height={120}
-                  alt="Capa do álbum Life is Strange da dupla Angus and Julia Stone"
-                />
-                <strong className="font-semibold">Daily Mix 1</strong>
-                <span className="text-sm text-zinc-400">
-                  Angus & Julia Stone, Clairo,The Luminieers and more
-                </span>
-              </a>
-              <a
-                href=""
-                className="bg-white/5 p-3 rounded-md flex flex-col gap-2 hover:bg-white/10 "
-              >
-                <Image
-                  className="w-full"
-                  src="/album.jpg"
-                  width={120}
-                  height={120}
-                  alt="Capa do álbum Life is Strange da dupla Angus and Julia Stone"
-                />
-                <strong className="font-semibold">Daily Mix 1</strong>
-                <span className="text-sm text-zinc-400">
-                  Angus & Julia Stone, Clairo,The Luminieers and more
-                </span>
-              </a>
-            </div>
+            <MadeForSection display_name={userProfile.display_name} data={madeForPlaylists} />
           </main>
         </div>
         <Footer />
