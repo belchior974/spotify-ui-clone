@@ -17,7 +17,7 @@ export const MadeForPlaylistItem = ({
     <a
       href={external_urls.spotify}
       target="_blank"
-      className="bg-white/5 p-3 group rounded-md flex flex-col gap-2 hover:bg-white/10 "
+      className="bg-white/5 p-3 group rounded-md flex flex-col gap-2 hover:bg-white/10 h-"
     >
       <Image
         className="w-full"
